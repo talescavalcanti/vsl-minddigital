@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
-const disclaimerVariants = {
+const disclaimerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
