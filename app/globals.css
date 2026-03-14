@@ -231,19 +231,126 @@ body {
   box-shadow: 0 6px 28px rgba(0, 200, 83, 0.55);
 }
 
+/* === TAP-TO-PLAY OVERLAY (mobile autoplay fallback) === */
+.tap-to-play {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.play-indicator--large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 6px;
+}
+
 /* === RESPONSIVE === */
-@media (max-width: 480px) {
+
+/* Tablet */
+@media (max-width: 768px) {
   .vsl-container {
-    padding: 24px 16px 40px;
-    gap: 22px;
+    padding: 32px 16px 48px;
+    gap: 24px;
   }
 
   .video-wrapper {
-    border-radius: 14px;
+    border-radius: 16px;
   }
 
   .cta-button {
-    padding: 16px 36px;
-    font-size: 16px;
+    padding: 16px 40px;
+    font-size: 17px;
+  }
+
+  .play-indicator {
+    width: 64px;
+    height: 64px;
+  }
+
+  .play-indicator svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mute-toggle {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .vsl-container {
+    padding: 20px 14px 36px;
+    gap: 20px;
+    max-width: 100%;
+  }
+
+  .headline {
+    font-size: clamp(18px, 5.5vw, 26px);
+    line-height: 1.35;
+  }
+
+  .sub-headline {
+    font-size: clamp(12px, 3.5vw, 14px);
+  }
+
+  .video-wrapper {
+    border-radius: 12px;
+  }
+
+  .yt-container::after {
+    height: 40px;
+  }
+
+  .cta-button {
+    padding: 14px 28px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .disclaimer {
+    font-size: 12px;
+    max-width: 100%;
+    padding: 0 4px;
+  }
+
+  .play-indicator,
+  .play-indicator--large {
+    width: 56px;
+    height: 56px;
+  }
+
+  .play-indicator svg,
+  .play-indicator--large svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mute-toggle {
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .mute-toggle svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .player-controls {
+    padding: 8px 10px;
+  }
+
+  .progress-bar-track {
+    height: 3px;
   }
 }

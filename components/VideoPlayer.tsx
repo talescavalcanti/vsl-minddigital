@@ -41,6 +41,7 @@ export default function VideoPlayer({ onVideoEnd }: VideoPlayerProps) {
   const [isMuted, setIsMuted] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [needsTap, setNeedsTap] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState("0:00");
   const [fakeTotal, setFakeTotal] = useState("0:00");
@@ -112,15 +113,26 @@ export default function VideoPlayer({ onVideoEnd }: VideoPlayerProps) {
         playsinline: 1,
       },
       events: {
-        onReady: () => {
+        onReady: (event: any) => {
           setIsReady(true);
-          setIsPlaying(true);
-          startProgressTracking();
+          // Try to play — mobile may block this
+          const playerState = event.target.getPlayerState();
+          if (playerState === 1) {
+            // Already playing (autoplay worked)
+            setIsPlaying(true);
+            setNeedsTap(false);
+            startProgressTracking();
+          } else {
+            // Autoplay was blocked — show tap overlay
+            setNeedsTap(true);
+            setIsPlaying(false);
+          }
         },
         onStateChange: (event: any) => {
           if (event.data === 1) {
             // Playing
             setIsPlaying(true);
+            setNeedsTap(false);
             startProgressTracking();
           } else if (event.data === 2) {
             // Paused
@@ -182,6 +194,7 @@ export default function VideoPlayer({ onVideoEnd }: VideoPlayerProps) {
       playerRef.current.pauseVideo();
     } else {
       playerRef.current.playVideo();
+      setNeedsTap(false);
     }
   };
 
@@ -198,8 +211,24 @@ export default function VideoPlayer({ onVideoEnd }: VideoPlayerProps) {
         className="yt-container"
       />
 
+      {/* Tap-to-play overlay for mobile (autoplay blocked) */}
+      {needsTap && isReady && !isPlaying && (
+        <div className="player-click-overlay tap-to-play" onClick={togglePlay}>
+          <motion.div
+            className="play-indicator play-indicator--large"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+          </motion.div>
+        </div>
+      )}
+
       {/* Clickable overlay to play/pause */}
-      {isReady && (
+      {isReady && !needsTap && (
         <div className="player-click-overlay" onClick={togglePlay}>
           <AnimatePresence>
             {!isPlaying && (
